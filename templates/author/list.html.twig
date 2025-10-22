@@ -1,0 +1,49 @@
+{# templates/author/list.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Auteurs{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Liste des Auteurs</h1>
+
+    {# 5. Afficher le nombre total d’auteurs. #}
+    <p>
+        Nombre total d'auteurs : <span class="badge bg-primary">{{ authors|length }}</span>
+    </p>
+    {% if authors is not  empty %}
+      {# 6. Parcourir le tableau et afficher les informations dans un tableau HTML. #}
+     <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Picture</th>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Nb Books</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for author in authors %}
+                <tr>
+                    <td><img src="{{ author.picture }}" alt="Image de {{ author.username }}" style="width: 75px; height: 75px; border-radius: 50%;"></td>
+                    <td>{{ author.id }}</td>
+                    <td>{{ author.username }}</td>
+                    <td>{{ author.email }}</td>
+                    <td>{{ author.nb_books }}</td>
+                    <td>
+                        {# 7. Ajouter un bouton « Details » qui redirige vers la page de détail. #}
+                        <a href="{{ path('author_details', {'id': author.id}) }}" class="btn btn-info btn-sm">
+                                Details
+                            </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+     </table>
+    {% else %}
+    <div aucun auteur trouvee </div>
+    {% endif %}
+</div>
+{% endblock %}
