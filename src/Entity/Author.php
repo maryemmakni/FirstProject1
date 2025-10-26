@@ -18,26 +18,23 @@ class Author
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
-    // Propriété $age ajoutée (était manquante dans le code original)
-    #[ORM\Column(length: 255)]
-    private ?string $age = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
-
-    // La propriété 'nb_books' n'est pas mappée en BDD, 
-    // elle est calculée via getNbBooks()
-
-    /**
-     * @var Collection<int, Book>
-     */
-    // 'mappedBy' doit correspondre à la propriété dans Book.php (qui doit être 'author')
-    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'author')]
+    // Relation inverse avec Book
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Book::class)]
     private Collection $books;
 
     public function __construct()
     {
         $this->books = new ArrayCollection();
+    }
+    
+    /**
+     * CORRECTION : C'est la méthode magique qui corrige votre erreur.
+     * Elle dit à Symfony d'utiliser le 'username'
+     * lorsqu'il doit convertir un objet Author en string.
+     */
+    public function __toString(): string
+    {
+        return $this->username ?? 'Auteur Inconnu';
     }
 
     public function getId(): ?int
@@ -55,40 +52,6 @@ class Author
         $this->username = $username;
         return $this;
     }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-        return $this;
-    }
-
-    // Getter pour $age
-    public function getAge(): ?string
-    {
-        return $this->age;
-    }
-
-    // Setter pour $age
-    public function setAge(string $age): static
-    {
-        $this->age = $age;
-        return $this;
-    }
-
-    /**
-     * C'est l'attribut calculé "nb_books"
-     */
-    public function getNbBooks(): int
-    {
-        return $this->books->count();
-    }
-
-    // La fonction setNbBooks() est supprimée car elle est incorrecte (calculée)
 
     /**
      * @return Collection<int, Book>

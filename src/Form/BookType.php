@@ -27,6 +27,7 @@ class BookType extends AbstractType
                 'placeholder' => 'Choisir une catégorie',
             ])
             // CORRIGÉ : Doit être 'author' (minuscule) pour correspondre à la propriété de l'entité Book
+            // Symfony va automatiquement utiliser EntityType ici grâce à la relation
             ->add('author'); 
     }
 

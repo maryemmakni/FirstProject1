@@ -13,7 +13,8 @@ class AuthorType extends AbstractType
     {
         $builder
             ->add('username')
-            ->add('age') // Ce champ nécessite que $age existe dans l'entité Author
+            // MODIFICATION : Champ 'age' supprimé pour correspondre à la Photo 2
+            // ->add('age') 
             ->add('email');
     }
 

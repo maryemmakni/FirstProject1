@@ -30,7 +30,7 @@
                     <td>{{ book.author.username }}</td> 
                     
                     <td>
-                        {# CORRIGÉ : Fermeture des balises <a> #}
+                        {# CORRIGÉ : Fermeture des balises <a> (déjà fait dans votre code) #}
                         <a href="{{ path('editBook', {'id': book.id}) }}">edit</a>
                         <a href="{{ path('deleteBook', {'id': book.id}) }}">delete</a>
                     </td>
@@ -41,4 +41,4 @@
 {% endif %}
 
 <p>Number of published books : {{ totalPublished }}</p>
-<p>Number of unpublished books : {{ totalUnpublished }}</
+<p>Number of unpublished books : {{ totalUnpublished }}</p>

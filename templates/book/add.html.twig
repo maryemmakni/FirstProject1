@@ -12,8 +12,11 @@
 {{ form_widget(formulaire.category) }}
 {{ form_errors(formulaire.category) }}<br>
 
-{{ form_label(formulaire.Author, 'Auteur') }}<br>
-{{ form_widget(formulaire.Author) }}
-{{ form_errors(formulaire.Author) }}
+{{ form_label(formulaire.author, 'Auteur') }}<br>
+{{ form_widget(formulaire.author) }}
+{{ form_errors(formulaire.author) }}<br>
+
+
+{{ form_rest(formulaire) }}
 
 {{ form_end(formulaire) }}
