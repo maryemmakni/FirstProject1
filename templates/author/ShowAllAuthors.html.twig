@@ -1,15 +1,44 @@
-<table>
-<tr>
-<td>ID</td>
-<td>username</td>
-<td>age</td>
-</tr>
-{% for l in list %}
-<tr>
-<td>{{l.id}}</td>
-<td>{{l.username}}</td>
-<td>{{l.email}}</td>
-<td>{{l.age}}</td>
-</tr>
-{% endfor %}
+{# templates/author/ShowAllAuthors.html.twig #}
+<table border="1">
+
+    {# En-tête du tableau #}
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Actions</th> {# Colonne "Actions" ajoutée #}
+        </tr>
+    </thead>
+
+    {# Corps du tableau #}
+    <tbody>
+        {# On fait la boucle sur la variable "list" #}
+        {% for l in list %}
+            <tr>
+                <td>{{ l.id }}</td>
+                <td>{{ l.username }}</td>
+                <td>{{ l.email }}</td>
+                <td>{{ l.age }}</td>
+                {# Cellule "Actions" ajoutée avec les liens #}
+                <td>
+                    {# CORRIGÉ : Noms de route 'author_edit' et 'author_delete' #}
+                    <a href="{{ path('author_edit', {'id': l.id}) }}">modify</a>
+                    <a href="{{ path('author_delete', {'id': l.id}) }}">Delete</a>
+                </td>
+            </tr>
+        {# S'il n'y a rien dans "list", on affiche un message #}
+        {% else %}
+            <tr>
+                {# Fusionne les 5 cellules #}
+                <td colspan="5">Aucun auteur trouvé.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+{# Ajout d'un lien pour créer un nouvel auteur (correspondant à la route 'author_add_form') #}
+<a href="{{ path('author_add_form') }}">
+    <button>Ajouter un auteur</button>
+</a>

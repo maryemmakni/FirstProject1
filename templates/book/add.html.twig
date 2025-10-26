@@ -1,0 +1,19 @@
+{{ form_start(formulaire) }}
+
+{{ form_label(formulaire.title, 'Titre') }}<br>
+{{ form_widget(formulaire.title) }}
+{{ form_errors(formulaire.title) }}<br>
+
+{{ form_label(formulaire.publicationDate, 'Date de publication') }}<br>
+{{ form_widget(formulaire.publicationDate) }}
+{{ form_errors(formulaire.publicationDate) }}<br>
+
+{{ form_label(formulaire.category, 'Catégorie') }}<br>
+{{ form_widget(formulaire.category) }}
+{{ form_errors(formulaire.category) }}<br>
+
+{{ form_label(formulaire.Author, 'Auteur') }}<br>
+{{ form_widget(formulaire.Author) }}
+{{ form_errors(formulaire.Author) }}
+
+{{ form_end(formulaire) }}
