@@ -1,36 +1,58 @@
 {# templates/book/show.html.twig #}
 <h1>List of Books</h1>
 
+{# NOUVEAU : AJOUT DU FORMULAIRE DE RECHERCHE #}
+<fieldset style="margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
+    <legend style="font-weight: bold; padding: 0 10px;">Search by Author Name</legend>
+    {# Le formulaire envoie en GET vers la route actuelle ("showBooks") #}
+    <form method="GET" action="{{ path('showBooks') }}" style="display: flex; gap: 10px; align-items: center;">
+        <label for="search">Author:</label>
+        {# 'search_term' vient du contrôleur, il contient ce que l'utilisateur a tapé #}
+        <input type="text" name="search" id="search" value="{{ search_term | default('') }}" style="padding: 8px; border: 1px solid #ddd; border-radius: 3px;">
+        <button type="submit" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">Search</button>
+        
+        {% if search_term %}
+            {# Bouton pour réinitialiser la recherche si un terme est présent #}
+            <a href="{{ path('showBooks') }}" style="text-decoration: none; color: #dc3545;">Reset Search</a>
+        {% endif %}
+    </form>
+</fieldset>
+<br>
+
 {% if list is empty %}
-    <p>No Books found</p>
+    {# Message personnalisé si la recherche ne donne rien #}
+    {% if search_term %}
+        <p style="color: red;">No Books found for author matching "{{ search_term }}"</p>
+    {% else %}
+        <p>No Books found</p>
+    {% endif %}
 {% else %}
-    <table border="1">
+    <table border="1" style="width: 100%; border-collapse: collapse;">
         <thead>
-            <tr>
-                <th>Title</th>
-                <th>Publication date</th>
-                <th>Published</th>
-                <th>Category</th>
-                <th>Author</th>
-                <th>Actions</th>
+            <tr style="background-color: #f8f9fa;">
+                <th style="padding: 10px; text-align: left;">Title</th>
+                <th style="padding: 10px; text-align: left;">Publication date</th>
+                <th style="padding: 10px; text-align: left;">Published</th>
+                <th style="padding: 10px; text-align: left;">Category</th>
+                <th style="padding: 10px; text-align: left;">Author</th>
+                <th style="padding: 10px; text-align: left;">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for book in list %}
-                <tr>
-                    <td>{{ book.title }}</td>
-                    <td>{{ book.publicationDate|date('F j, Y') }}</td> {# Format Y H:i enlevé car c'est une Date, pas DateTime #}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 10px;">{{ book.title }}</td>
+                    <td style="padding: 10px;">{{ book.publicationDate|date('F j, Y') }}</td>
                     
-                    {# Le '1' était codé en dur, remplacé par la vraie valeur #}
-                    <td>{{ book.published ? 'Yes' : 'No' }}</td> 
+                    {# La valeur est lue depuis l'objet book #}
+                    <td style="padding: 10px;">{{ book.published ? 'Yes' : 'No' }}</td> 
                     
-                    <td>{{ book.category }}</td>
+                    <td style="padding: 10px;">{{ book.category }}</td>
                     
-                    {# 'book.author' (minuscule) correspond à l'entité corrigée #}
-                    <td>{{ book.author.username }}</td> 
+                    {# Affiche le username de l'auteur #}
+                    <td style="padding: 10px;">{{ book.author.username }}</td> 
                     
-                    <td>
-                        {# CORRIGÉ : Fermeture des balises <a> (déjà fait dans votre code) #}
+                    <td style="padding: 10px;">
                         <a href="{{ path('editBook', {'id': book.id}) }}">edit</a>
                         <a href="{{ path('deleteBook', {'id': book.id}) }}">delete</a>
                     </td>
@@ -40,5 +62,11 @@
     </table>
 {% endif %}
 
-<p>Number of published books : {{ totalPublished }}</p>
-<p>Number of unpublished books : {{ totalUnpublished }}</p>
+<br>
+{# Affiche le total principal (soit 'publiés', soit 'trouvés') #}
+<p style="font-weight: bold;">Total books in list: {{ totalPublished }}</p>
+
+{# N'affiche la ligne "unpublished" que si on n'est PAS en mode recherche ET si le total est > 0 #}
+{% if not search_term and totalUnpublished is defined and totalUnpublished > 0 %}
+    <p>Number of unpublished books : {{ totalUnpublished }}</p>
+{% endif %}

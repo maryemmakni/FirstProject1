@@ -50,19 +50,39 @@ final class BookController extends AbstractController
         ]);
     }
 
-    #[Route('/showBooks', name: 'showBooks')]
-    public function showBooks(BookRepository $repo): Response
+   public function showBooks(BookRepository $repo, Request $request): Response
     {
-        $publishedBooks = $repo->findBy(['published' => true]);
-        $unpublishedBooks = $repo->findBy(['published' => false]);
+        // 1. Récupérer le terme de recherche depuis l'URL (?search=...)
+        $search = $request->query->get('search');
+        $list = [];
+        $totalUnpublished = 0;
 
-        $totalPublished = count($publishedBooks);
-        $totalUnpublished = count($unpublishedBooks);
+        // DÉBUT DE LA LOGIQUE D'INTÉGRATION DE LA RECHERCHE
+        if ($search) {
+            // S'il y a un terme de recherche, on utilise la fonction DQL
+            $list = $repo->searchBookByAuthorDQL($search);
+            // On réinitialise les totaux non publiés pour cette vue
+            $totalPublished = count($list);
+            $totalUnpublished = 0; // Pas pertinent lors d'une recherche
+
+        } else {
+            // SINON, on exécute votre logique originale (affichage normal)
+            $list = $repo->findBy(['published' => true]);
+            $unpublishedBooks = $repo->findBy(['published' => false]);
+
+            $totalPublished = count($list);
+            $totalUnpublished = count($unpublishedBooks);
+        }
+        // FIN DE LA LOGIQUE D'INTÉGRATION DE LA RECHERCHE
+
 
         return $this->render('book/show.html.twig', [
-            'list' => $publishedBooks,
+            // 'list' contient soit les livres publiés, soit les résultats de la recherche
+            'list' => $list, 
             'totalPublished' => $totalPublished,
             'totalUnpublished' => $totalUnpublished,
+            // On renvoie la valeur de recherche pour réafficher le formulaire
+            'search_term' => $search
         ]);
     }
 
@@ -105,6 +125,23 @@ final class BookController extends AbstractController
 
         // CORRIGÉ : Ajout d'une réponse pour afficher le résultat
         return new Response('Nombre de livres Romance : ' . $totalRomanceBooks);
+    }*/
+     public function searchBooksByDate(BookRepository $repo): Response
+    {
+        // Les dates de la question
+        $startDate = '2014-01-01';
+        $endDate = '2018-12-31';
+
+        // On appelle la fonction du Repository que vous avez créée
+        $list = $repo->findBooksPublishedBetween($startDate, $endDate);
+
+        // On réutilise le template d'affichage 'show.html.twig'
+        return $this->render('book/show.html.twig', [
+            'list' => $list,
+            'totalPublished' => count($list), // Le total est juste le nombre de livres trouvés
+            'totalUnpublished' => 0 // Cette variable n'est pas pertinente ici
+        ]);
     }
-        */
+
+        
 }

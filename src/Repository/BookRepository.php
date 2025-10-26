@@ -40,4 +40,49 @@ class BookRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+      public function findBooksPublishedBetween($startDate, $endDate): array
+    {
+        // On récupère l'Entity Manager
+        $em = $this->getEntityManager();
+
+        // On écrit la requête DQL en ciblant l'Entité "Book"
+        $dql = 'SELECT b
+                FROM App\Entity\Book b
+                WHERE b.published = :published
+                AND b.publicationDate BETWEEN :start AND :end
+                ORDER BY b.publicationDate ASC';
+
+        // On crée la requête
+        $query = $em->createQuery($dql);
+
+        // On définit les paramètres pour sécuriser la requête
+        $query->setParameter('published', true);
+        $query->setParameter('start', $startDate);
+        $query->setParameter('end', $endDate);
+
+        // On retourne le résultat (une liste d'objets Book)
+        return $query->getResult();
+    }
+
+   public function searchBookByAuthorDQL($search): array
+    {
+        // On écrit la requête DQL en ciblant les entités PHP
+        $dql = 'SELECT b
+                FROM App\Entity\Book b
+                JOIN b.author a
+                WHERE a.username LIKE :author_name';
+        
+        $query = $this->getEntityManager()->createQuery($dql);
+        
+        $query->setParameter('author_name', '%' . $search . '%');
+
+        return $query->getResult();
+    }
+
+
+
+
+
+
+
 }

@@ -12,16 +12,14 @@ class AuthorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username')
-            // MODIFICATION : Champ 'age' supprimé pour correspondre à la Photo 2
-            // ->add('age') 
-            ->add('email');
+            ->add('username') // Champ 'username'
+            ->add('email');    // Champ 'email'
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Author::class,
+            'data_class' => Author::class, // Le formulaire est lié à l'entité Author
         ]);
     }
 }

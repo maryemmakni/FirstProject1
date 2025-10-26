@@ -18,7 +18,12 @@ class Author
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
+    // Ajout du champ email, car il est utilisé dans le formulaire et le contrôleur
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
+
     // Relation inverse avec Book
+    // NOTE: Assurez-vous d'avoir une entité Book.php correspondante.
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Book::class)]
     private Collection $books;
 
@@ -28,9 +33,8 @@ class Author
     }
     
     /**
-     * CORRECTION : C'est la méthode magique qui corrige votre erreur.
-     * Elle dit à Symfony d'utiliser le 'username'
-     * lorsqu'il doit convertir un objet Author en string.
+     * MÉTHODE MAGIQUE POUR CORRIGER L'ERREUR DE FORMULAIRE.
+     * Permet à Doctrine et aux formulaires de convertir l'objet Author en string (pour les listes déroulantes).
      */
     public function __toString(): string
     {
@@ -50,6 +54,17 @@ class Author
     public function setUsername(string $username): static
     {
         $this->username = $username;
+        return $this;
+    }
+    
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
         return $this;
     }
 
